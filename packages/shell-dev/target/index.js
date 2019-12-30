@@ -12,6 +12,12 @@ import MyClass from './MyClass.js'
 import router from './router'
 import TransitionExample from './TransitionExample.vue'
 import Router from './router/Router.vue'
+import ProxyObject from './Proxy/ProxyObject.vue'
+import { PaginationPlugin, createResource } from 'vuex-pagination'
+import { fetchPage } from './_api/api-client'
+
+Vue.use(store)
+Vue.use(PaginationPlugin)
 
 window.VUE_DEVTOOLS_CONFIG = {
   openInEditorHost: '/'
@@ -25,6 +31,11 @@ for (var i = 0; i < 100; i++) {
 const circular = {}
 circular.self = circular
 
+// Initialize resource
+createResource('licenses', fetchPage)
+
+console.log('fetchPage', fetchPage)
+
 const app = new Vue({
   store,
   router,
@@ -36,6 +47,7 @@ const app = new Vue({
   },
   render (h) {
     return h('div', null, [
+      h(ProxyObject),
       h(Counter),
       h(Target, { props: { msg: 'hi', ins: new MyClass() } }),
       h(Other),
